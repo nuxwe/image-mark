@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>Document</title>
+    <style>
+        #image-edit{
+            width: 100%;
+        }
+        button{
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+    <button class='button1'>清空全部</button>
+    <button class='button2'>撤销到上一步</button>
+    <button class='button3'>画圆</button>
+    <button class='button4'>画线</button>
+    <button class='button5'>输出图片</button>
+    <button class='button6'>输出只有线的图片</button>
+    <button class='button7'>输出只有圆的图片</button>
+    <button class='button8'>输出线分开的图片</button>
+    <button class='button9'>输出圆分开的图片</button>
+    <div id="image-edit"></div>
+</body>
+<!-- 箭头 -->
+    <script src="arrow.js"></script>
+<!-- 操作canvas -->    
+    <script src="index.js"></script>
+    <script>
+        var a1=new SNTMARK();
+        a1.init(
+            {
+                el:'image-edit',
+                url:'https://img2.baidu.com/it/u=3331665880,2001605345&fm=26&fmt=auto&gp=0.jpg'
+            }
+        )
+        document.querySelector('.button1').addEventListener('click',function(){
+            a1.clearAll()
+        })
+        document.querySelector('.button2').addEventListener('click',function(){
+            a1.clearLast()
+        })
+        document.querySelector('.button3').addEventListener('click',function(){
+            a1.arc()
+        })
+        document.querySelector('.button4').addEventListener('click',function(){
+            a1.line()
+        })
+        document.querySelector('.button5').addEventListener('click',function(){
+            a1.getImageList({},function(ret){
+                var str=''
+                for(var i=0;i<ret.length;i++){
+                    str+=`<img src="${ret[i]}" />`
+                }
+                document.querySelector('body').insertAdjacentHTML('beforeEnd',str)
+            })
+        })
+        document.querySelector('.button6').addEventListener('click',function(){
+            a1.getImageList({
+                rules:'line'
+            },function(ret){
+                var str=''
+                for(var i=0;i<ret.length;i++){
+                    str+=`<img src="${ret[i]}" />`
+                }
+                document.querySelector('body').insertAdjacentHTML('beforeEnd',str)
+            })
+        })
+        document.querySelector('.button7').addEventListener('click',function(){
+            a1.getImageList({
+                rules:'arc'
+            },function(ret){
+                var str=''
+                for(var i=0;i<ret.length;i++){
+                    str+=`<img src="${ret[i]}" />`
+                }
+                document.querySelector('body').insertAdjacentHTML('beforeEnd',str)
+            })
+        })
+        document.querySelector('.button8').addEventListener('click',function(){
+            a1.getImageList({
+                rules:'line',
+                methods:9
+            },function(ret){
+                var str=''
+                for(var i=0;i<ret.length;i++){
+                    str+=`<img src="${ret[i]}" />`
+                }
+                document.querySelector('body').insertAdjacentHTML('beforeEnd',str)
+            })
+        })
+        document.querySelector('.button9').addEventListener('click',function(){
+            a1.getImageList({
+                rules:'arc',
+                methods:9
+            },function(ret){
+                var str=''
+                for(var i=0;i<ret.length;i++){
+                    str+=`<img src="${ret[i]}" />`
+                }
+                document.querySelector('body').insertAdjacentHTML('beforeEnd',str)
+            })
+        })
+    </script>
+</html>
