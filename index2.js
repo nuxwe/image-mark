@@ -1,25 +1,21 @@
-// liuxue 20210601
-// canvas画图标注
-(function(window,document){
-    // 创建函数对象
-    var SNTMARK = function(option){
-        // 申明各种变量
-        this.lineList=[];//线的集合
-        this.arcList=[];//圆的集合
-        this.temporaryLine=[];//线临时存放
-        this.temporaryArc=[];//圆临时存放
-        this.timer;//定时器
-        this.canvs_id='';//包裹canvas容器的id
-        this.markimg_url='';//图片的url
-        this.canvas='';//canvas容器
-        this.ctx='';//canvas对象
-        this.isline=false;//代表划线
-        this.isarc=false;//代表画图
-        this.image;//image对象
-        this.image_url_list=[];//输出的图片数组
-    }
-    SNTMARK.prototype={
-        init: function(option){
+    class SNTMARK {
+        constructor(){
+            // 申明各种变量
+            this.lineList=[];//线的集合
+            this.arcList=[];//圆的集合
+            this.temporaryLine=[];//线临时存放
+            this.temporaryArc=[];//圆临时存放
+            this.timer;//定时器
+            this.canvs_id='';//包裹canvas容器的id
+            this.markimg_url='';//图片的url
+            this.canvas='';//canvas容器
+            this.ctx='';//canvas对象
+            this.isline=false;//代表划线
+            this.isarc=false;//代表画图
+            this.image;//image对象
+            this.image_url_list=[];//输出的图片数组
+        }
+        init(option){
             var _this=this;
             if(option.url){
                 _this.markimg_url=option.url
@@ -52,8 +48,8 @@
                 _this.end();
             }
            
-        },
-        start: function(){
+        }
+        start(){
             var _this = this;
             _this.canvas.addEventListener('touchstart',function(e){
                 // 计算手指的位置
@@ -82,22 +78,22 @@
             _this.move();
             document.addEventListener("touchmove",_this.defaultEvent,false);
             
-        },
-        end: function(){
+        }
+        end(){
             var _this=this;
             _this.canvas.addEventListener('touchend',function(){
                 if(_this.isline){
                     _this.lineList.push(_this.temporaryLine);
                     _this.drawLine(_this.temporaryLine,true);
                 }
-                if(_this.isarc && _this.temporaryArc===2){
+                if(_this.isarc && _this.temporaryArc.length===2){
                     _this.arcList.push(_this.temporaryArc);
                 }
             })
             document.removeEventListener("touchmove",this.defaultEvent,false);
-        },
+        }
         // 移动
-        move: function(){
+        move(){
             var _this=this;
             var delay=50;
             _this.canvas.addEventListener('touchmove',function(e){
@@ -135,13 +131,13 @@
                     }
                 }, delay)
             })
-        },
+        }
         // 阻止默认事件
-        defaultEvent: function(e){
+        defaultEvent(e){
             e.preventDefault();
-        },
+        }
         //画线
-        drawLine: function(data,isTria){
+        drawLine(data,isTria){
             this.ctx.beginPath();
             this.ctx.lineWidth=5;
             this.canvas.fillStyle="#1dd1a1";
@@ -160,9 +156,9 @@
             if(isTria && data.length>=2){
                 this.drawArrow(data[data.length-2].x,data[data.length-2].y,data[data.length-1].x,data[data.length-1].y,30,20,5,'#1dd1a1')
             }
-        },
+        }
         // 画圆的前置操作
-        beforeDrawArc: function(data){
+        beforeDrawArc(data){
             this.ctx.clearRect(0, 0, this.canvas.width,this.canvas.height);//清除全部重绘
             this.ctx.drawImage(this.image,0,0,this.canvas.width,this.canvas.height);//重绘图片
             // 重绘所有的线
@@ -175,10 +171,10 @@
             }
             if(data && data.length===2){
                 this.drawArc(data)
-            } 
-        },
+            }
+        }
         // 画圆的方法
-        drawArc: function(data){
+        drawArc(data){
             let ox=data[0].x;
             let oy=data[0].y;
             let nx=data[1].x;
@@ -190,16 +186,16 @@
             this.ctx.arc(ox,oy,r,0,Math.PI*2,true);
             this.ctx.closePath();
             this.ctx.stroke();
-        },
+        }
         //清除全部元素的操作
-        clearAll: function(){
+        clearAll(){
             this.ctx.clearRect(0, 0, this.canvas.width,this.canvas.height);//清除全部重绘
             this.ctx.drawImage(this.image,0,0,this.canvas.width,this.canvas.height);
             this.lineList=[];
             this.arcList=[]
-        },
+        }
         //撤销上一个
-        clearLast: function(){
+        clearLast(){
             // 删除最后一个 然后绘制
             if((this.isline && this.lineList.length>0 )|| this.arcList.length==0){
                 this.lineList.splice(this.lineList.length-1,1);  
@@ -207,17 +203,17 @@
                 this.arcList.splice(this.arcList.length-1,1);
             }
             this.beforeDrawArc();
-        },
-        line: function(){
+        }
+        line(){
             this.isline=true;
             this.isarc=false;
-        },
-        arc: function(){
+        }
+        arc(){
             this.isline=false;
             this.isarc=true;
-        },
+        }
         // 绘制箭头
-        drawArrow: function(fromX, fromY, toX, toY,theta,headlen,width,color) {
+        drawArrow(fromX, fromY, toX, toY,theta, headlen, width, color) {
             theta = typeof(theta) != 'undefined' ? theta : 30;
             headlen = typeof(theta) != 'undefined' ? headlen : 10;
             width = typeof(width) != 'undefined' ? width : 1;
@@ -248,9 +244,9 @@
             this.ctx.lineWidth = width;
             this.ctx.stroke();
             this.ctx.restore();
-        },
+        }
         //输出图片 quality质量默认1  type图片的格式默认image/png   rules规则返回的'all'  'arc'  'line'   methods输出图片方式 methods 单张输出||全部输出   
-        getImageList: function(option,callback){
+        getImageList(option, callback){
             var type = option.type || 'image/png'
             var rules = option.rules || 'all';//默认输出全部
             var quality = option.quality || 1;//输出图片的质量   0-0.92  默认1高质量输出
@@ -302,5 +298,3 @@
             callback(this.image_url_list)
         }
     }
-    window.SNTMARK=SNTMARK;
-})(window,document)
