@@ -46,10 +46,10 @@
                 imageh = _this.image.height;
                 _this.canvas.height = imageh/(imagew/elw);
                 _this.ctx.drawImage(_this.image,0,0,elw,_this.canvas.height);
- 	document.getElementById(_this.canvs_id).append(_this.canvas);
-            // 监听canvsa上面的活动
-            this.start();
-            this.end();
+ 	            document.getElementById(_this.canvs_id).append(_this.canvas);
+                // 监听canvsa上面的活动
+                _this.start();
+                _this.end();
             }
            
         },
@@ -90,7 +90,7 @@
                     _this.lineList.push(_this.temporaryLine);
                     _this.drawLine(_this.temporaryLine,true);
                 }
-                if(_this.isarc){
+                if(_this.isarc && data.length===2){
                     _this.arcList.push(_this.temporaryArc);
                 }
             })
@@ -173,7 +173,7 @@
             for(var i=0;i<this.arcList.length;i++){
                 this.drawArc(this.arcList[i])
             }
-            if(data){
+            if(data && data.length===2){
                 this.drawArc(data)
             } 
         },
@@ -252,12 +252,17 @@
         //输出图片 quality质量默认1  type图片的格式默认image/png   rules规则返回的'all'  'arc'  'line'   methods输出图片方式 methods 单张输出||全部输出   
         getImageList: function(option,callback){
             var type = option.type || 'image/png'
-            var rules = option.rules || 'all';
-            var quality = option.quality || 1;
-            var methods = option.methods || 10;
+            var rules = option.rules || 'all';//默认输出全部
+            var quality = option.quality || 1;//输出图片的质量   0-0.92  默认1高质量输出
+            var methods = option.methods || 10;//是否输出全部 10输出全部相关的  否则按张输出
+            var original = option.original || false;//是否可以输出没有标记过的图片；默认不可以
             this.image_url_list=[];
             if(rules==='all'){
-                this.image_url_list.push(this.canvas.toDataURL(type,quality))
+                if(this.lineList.length>0 || this.arcList.length>0){
+                    this.image_url_list.push(this.canvas.toDataURL(type,quality)) 
+                }else if(original){
+                    this.image_url_list.push(this.canvas.toDataURL(type,quality)) 
+                }
             }else{
                 //线判断是否要整张输出
                 var nowList;
