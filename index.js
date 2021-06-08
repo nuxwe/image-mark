@@ -46,11 +46,12 @@
                 imageh = _this.image.height;
                 _this.canvas.height = imageh/(imagew/elw);
                 _this.ctx.drawImage(_this.image,0,0,elw,_this.canvas.height);
-            }
-            document.getElementById(_this.canvs_id).append(_this.canvas);
+ 	document.getElementById(_this.canvs_id).append(_this.canvas);
             // 监听canvsa上面的活动
             this.start();
             this.end();
+            }
+           
         },
         start: function(){
             var _this = this;
@@ -157,7 +158,7 @@
             this.ctx.strokeStyle="#1dd1a1";
             this.ctx.stroke();
             if(isTria && data.length>=2){
-                this.drawArrow(this.ctx,data[data.length-2].x,data[data.length-2].y,data[data.length-1].x,data[data.length-1].y,30,20,5,'#1dd1a1')
+                this.drawArrow(data[data.length-2].x,data[data.length-2].y,data[data.length-1].x,data[data.length-1].y,30,20,5,'#1dd1a1')
             }
         },
         // 画圆的前置操作
@@ -216,7 +217,7 @@
             this.isarc=true;
         },
         // 绘制箭头
-        drawArrow: function(ctx, fromX, fromY, toX, toY,theta,headlen,width,color) {
+        drawArrow: function(fromX, fromY, toX, toY,theta,headlen,width,color) {
             theta = typeof(theta) != 'undefined' ? theta : 30;
             headlen = typeof(theta) != 'undefined' ? headlen : 10;
             width = typeof(width) != 'undefined' ? width : 1;
@@ -229,24 +230,24 @@
                 topY = headlen * Math.sin(angle1),
                 botX = headlen * Math.cos(angle2),
                 botY = headlen * Math.sin(angle2);
-            ctx.save();
-            ctx.beginPath();
+            this.ctx.save();
+            this.ctx.beginPath();
             var arrowX = fromX - topX,
                 arrowY = fromY - topY;
-            ctx.moveTo(arrowX, arrowY);
-            ctx.moveTo(fromX, fromY);
-            ctx.lineTo(toX, toY);
+            this.ctx.moveTo(arrowX, arrowY);
+            this.ctx.moveTo(fromX, fromY);
+            this.ctx.lineTo(toX, toY);
             arrowX = toX + topX;
             arrowY = toY + topY;
-            ctx.moveTo(arrowX, arrowY);
-            ctx.lineTo(toX, toY);
+            this.ctx.moveTo(arrowX, arrowY);
+            this.ctx.lineTo(toX, toY);
             arrowX = toX + botX;
             arrowY = toY + botY;
-            ctx.lineTo(arrowX, arrowY);
-            ctx.strokeStyle = color;
-            ctx.lineWidth = width;
-            ctx.stroke();
-            ctx.restore();
+            this.ctx.lineTo(arrowX, arrowY);
+            this.ctx.strokeStyle = color;
+            this.ctx.lineWidth = width;
+            this.ctx.stroke();
+            this.ctx.restore();
         },
         //输出图片 quality质量默认1  type图片的格式默认image/png   rules规则返回的'all'  'arc'  'line'   methods输出图片方式 methods 单张输出||全部输出   
         getImageList: function(option,callback){
