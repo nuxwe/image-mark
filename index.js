@@ -58,14 +58,12 @@
             _this.canvas.addEventListener('touchstart',function(e){
                 // 计算手指的位置
                 var touches = e.touches[0];
-                var eltop = e.target.offsetTop;
-                var elleft= e.target.offsetLeft;
                 if(_this.isline){
                     _this.temporaryLine=[];
                     _this.temporaryLine.push(
                         {
-                            x:touches.clientX-elleft,
-                            y:touches.clientY-eltop,
+                            x:touches.pageX-_this.canvas.getBoundingClientRect().left,
+                            y:touches.pageY-_this.canvas.getBoundingClientRect().top,
                         }
                     );
                 }
@@ -73,8 +71,8 @@
                     _this.temporaryArc=[];
                     _this.temporaryArc.push(
                         {
-                            x:touches.clientX-elleft,
-                            y:touches.clientY-eltop,
+                            x:touches.pageX-_this.canvas.getBoundingClientRect().left,
+                            y:touches.pageY-_this.canvas.getBoundingClientRect().top,
                         }
                     );
                 }  
@@ -117,8 +115,8 @@
                     if(_this.isline){
                         _this.temporaryLine.push(
                             {
-                                x:touches.clientX-elleft,
-                                y:touches.clientY-eltop,
+                                x:touches.pageX-_this.canvas.getBoundingClientRect().left,
+                                y:touches.pageY-_this.canvas.getBoundingClientRect().top,
                             }
                         )
                         // 绘图
@@ -128,8 +126,8 @@
                         // 画圆
                         _this.temporaryArc.length=1;
                         _this.temporaryArc.push({
-                            x:touches.clientX-elleft,
-                            y:touches.clientY-eltop,
+                            x:touches.pageX-_this.canvas.getBoundingClientRect().left,
+                            y:touches.pageY-_this.canvas.getBoundingClientRect().top,
                         })
                         _this.beforeDrawArc(_this.temporaryArc);
                     }
