@@ -16,7 +16,7 @@
             this.image_url_list=[];//输出的图片数组
         }
         init(option){
-            var _this=this;
+            let _this=this;
             if(option.url){
                 _this.markimg_url=option.url
             }else{
@@ -28,16 +28,16 @@
                 throw 'el undefined'
             };
             _this.image = new Image;
-            var imagew,imageh;
+            let imagew,imageh,
             // 获取宽度
-            var elw = document.getElementById(_this.canvs_id).offsetWidth;
+                elw = document.getElementById(_this.canvs_id).offsetWidth;
             // 创建一个canvas
             _this.canvas=document.createElement('canvas');
             _this.ctx=_this.canvas.getContext("2d");
             _this.canvas.width=elw;
             _this.image.src = _this.markimg_url;
             _this.image.setAttribute('crossOrigin', 'anonymous');
-            _this.image.onload = function(){
+            _this.image.onload = ()=>{
                 imagew = _this.image.width;
                 imageh = _this.image.height;
                 _this.canvas.height = imageh/(imagew/elw);
@@ -50,12 +50,12 @@
            
         }
         start(){
-            var _this = this;
-            _this.canvas.addEventListener('touchstart',function(e){
+            let _this = this;
+            _this.canvas.addEventListener('touchstart',(e)=>{
                 // 计算手指的位置
-                var touches = e.touches[0];
-                var eltop = e.target.offsetTop;
-                var elleft= e.target.offsetLeft;
+                let touches = e.touches[0],
+                    eltop = e.target.offsetTop,
+                    elleft= e.target.offsetLeft;
                 if(_this.isline){
                     _this.temporaryLine=[];
                     _this.temporaryLine.push(
@@ -80,8 +80,8 @@
             
         }
         end(){
-            var _this=this;
-            _this.canvas.addEventListener('touchend',function(){
+            let _this=this;
+            _this.canvas.addEventListener('touchend',()=>{
                 if(_this.isline){
                     _this.lineList.push(_this.temporaryLine);
                     _this.drawLine(_this.temporaryLine,true);
@@ -94,18 +94,18 @@
         }
         // 移动
         move(){
-            var _this=this;
-            var delay=50;
-            _this.canvas.addEventListener('touchmove',function(e){
+            let _this=this,
+                delay=50;
+            _this.canvas.addEventListener('touchmove',(e)=>{
                 e.preventDefault();
                 if(_this.isline){
                     delay=100;
                 }else{
                     delay=10;
                 }
-                var touches = e.touches[0];
-                var eltop = e.target.offsetTop;
-                var elleft= e.target.offsetLeft;
+                let touches = e.touches[0],
+                    eltop = e.target.offsetTop,
+                    elleft= e.target.offsetLeft;
                 if(_this.timer){
                     clearTimeout(_this.timer)
                 }
@@ -143,8 +143,7 @@
             this.canvas.fillStyle="#1dd1a1";
             // for循环绘制中间点
             for(let i=0;i<data.length;i++){
-                let ux = data[i].x;
-                let uy = data[i].y;
+                let [ux,uy]= [data[i].x,data[i].y];
                 if(i===0){
                     this.ctx.moveTo(ux, uy);
                 }else{
@@ -162,11 +161,11 @@
             this.ctx.clearRect(0, 0, this.canvas.width,this.canvas.height);//清除全部重绘
             this.ctx.drawImage(this.image,0,0,this.canvas.width,this.canvas.height);//重绘图片
             // 重绘所有的线
-            for(var j=0;j<this.lineList.length;j++){
+            for(let j=0;j<this.lineList.length;j++){
                 this.drawLine(this.lineList[j],true)
             }
             //重绘所有的圆
-            for(var i=0;i<this.arcList.length;i++){
+            for(let i=0;i<this.arcList.length;i++){
                 this.drawArc(this.arcList[i])
             }
             if(data && data.length===2){
@@ -175,10 +174,7 @@
         }
         // 画圆的方法
         drawArc(data){
-            let ox=data[0].x;
-            let oy=data[0].y;
-            let nx=data[1].x;
-            let ny=data[1].y;
+            let [ox,oy,nx,ny]=[data[0].x,data[0].y,data[1].x,data[1].y]
             let r = Math.sqrt(Math.pow(nx-ox, 2)+Math.pow(ny-oy, 2));
             this.ctx.beginPath();
             this.ctx.lineWidth=5;
@@ -219,7 +215,7 @@
             width = typeof(width) != 'undefined' ? width : 1;
             color = typeof(color) != 'color' ? color : '#000';
             // 计算各角度和对应的P2,P3坐标
-            var angle = Math.atan2(fromY - toY, fromX - toX) * 180 / Math.PI,
+            let angle = Math.atan2(fromY - toY, fromX - toX) * 180 / Math.PI,
                 angle1 = (angle + theta) * Math.PI / 180,
                 angle2 = (angle - theta) * Math.PI / 180,
                 topX = headlen * Math.cos(angle1),
@@ -228,7 +224,7 @@
                 botY = headlen * Math.sin(angle2);
             this.ctx.save();
             this.ctx.beginPath();
-            var arrowX = fromX - topX,
+            let arrowX = fromX - topX,
                 arrowY = fromY - topY;
             this.ctx.moveTo(arrowX, arrowY);
             this.ctx.moveTo(fromX, fromY);
@@ -247,11 +243,11 @@
         }
         //输出图片 quality质量默认1  type图片的格式默认image/png   rules规则返回的'all'  'arc'  'line'   methods输出图片方式 methods 单张输出||全部输出   
         getImageList(option, callback){
-            var type = option.type || 'image/png'
-            var rules = option.rules || 'all';//默认输出全部
-            var quality = option.quality || 1;//输出图片的质量   0-0.92  默认1高质量输出
-            var methods = option.methods || 10;//是否输出全部 10输出全部相关的  否则按张输出
-            var original = option.original || false;//是否可以输出没有标记过的图片；默认不可以
+            let type = option.type || 'image/png'
+            let rules = option.rules || 'all';//默认输出全部
+            let quality = option.quality || 1;//输出图片的质量   0-0.92  默认1高质量输出
+            let methods = option.methods || 10;//是否输出全部 10输出全部相关的  否则按张输出
+            let original = option.original || false;//是否可以输出没有标记过的图片；默认不可以
             this.image_url_list=[];
             if(rules==='all'){
                 if(this.lineList.length>0 || this.arcList.length>0){
@@ -261,7 +257,7 @@
                 }
             }else{
                 //线判断是否要整张输出
-                var nowList;
+                let nowList;
                 if(rules==='line'){
                     nowList=this.lineList;
                 }else{
@@ -270,7 +266,7 @@
                 if(methods===10){
                     this.ctx.clearRect(0, 0, this.canvas.width,this.canvas.height);//清除全部重绘
                     this.ctx.drawImage(this.image,0,0,this.canvas.width,this.canvas.height);//将图重新画在画布上面
-                    for(var i=0;i<nowList.length;i++){
+                    for(let i=0;i<nowList.length;i++){
                         if(rules==='line'){
                             this.drawLine(nowList[i],true)
                         }else{
@@ -281,7 +277,7 @@
                         this.image_url_list.push(this.canvas.toDataURL(type,quality)) 
                     }
                 }else{
-                    for(var i=0;i<nowList.length;i++){
+                    for(let i=0;i<nowList.length;i++){
                         this.ctx.clearRect(0, 0, this.canvas.width,this.canvas.height);//清除全部重绘
                         this.ctx.drawImage(this.image,0,0,this.canvas.width,this.canvas.height);//将图重新画在画布上面
                         if(rules==='line'){
