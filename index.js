@@ -58,6 +58,9 @@
             _this.canvas.addEventListener('touchstart',function(e){
                 // 计算手指的位置
                 var touches = e.touches[0];
+                if(!_this.isline&&!_this.isarc){
+                    return false;
+                }
                 if(_this.isline){
                     _this.temporaryLine=[];
                     _this.temporaryLine.push(
@@ -76,67 +79,85 @@
                         }
                     );
                 }  
+                _this.move();
+                _this.canvas.addEventListener("touchmove",_this.defaultEvent,false);
             })
-            _this.move();
-            document.addEventListener("touchmove",_this.defaultEvent,false);
+           
             
         },
         end: function(){
             var _this=this;
             _this.canvas.addEventListener('touchend',function(){
                 if(_this.isline){
-                    _this.lineList.push(_this.temporaryLine);
-                    _this.drawLine(_this.temporaryLine,true);
+                    setTimeout(function(){
+                        // 处理长时间停留时的误差
+                        for(var i=_this.temporaryLine.length-1;i>=1;i--){
+                            if(Math.abs(_this.temporaryLine[i].x-_this.temporaryLine[i-1].x)<=5 && Math.abs(_this.temporaryLine[i].y-_this.temporaryLine[i-1].y)<=5){
+                                _this.temporaryLine.splice(i,1)
+                            }else{
+                                break;
+                            }
+                        }
+                        _this.lineList.push(_this.temporaryLine);
+                        _this.drawLine(_this.temporaryLine,true);
+                        _this.temporaryLine=[];
+                    },100)
                 }
-                if(_this.isarc && _this.temporaryArc===2){
-                    _this.arcList.push(_this.temporaryArc);
+                if(_this.isarc && _this.temporaryArc.length===2){
+                    _this.arcList.push(_this.temporaryArc)
                 }
+                //移除默认事件
+                _this.canvas.removeEventListener("touchmove",_this.defaultEvent,false);
             })
-            document.removeEventListener("touchmove",this.defaultEvent,false);
         },
         // 移动
         move: function(){
             var _this=this;
             var delay=50;
             _this.canvas.addEventListener('touchmove',function(e){
-                e.preventDefault();
+                // e.preventDefault();
+                e.stopPropagation();
                 if(_this.isline){
-                    delay=100;
+                    delay=50;
                 }else{
-                    delay=10;
+                    delay=4;
                 }
                 var touches = e.touches[0];
-                var eltop = e.target.offsetTop;
-                var elleft= e.target.offsetLeft;
-                if(_this.timer){
-                    clearTimeout(_this.timer)
+                if(_this.isline){
+                    if(_this.timer){
+                        clearTimeout(_this.timer)
+                    }
+
+                    _this.timer =setTimeout(()=>{
+                        
+                            _this.temporaryLine.push(
+                                {
+                                    x:touches.pageX-_this.canvas.getBoundingClientRect().left,
+                                    y:touches.pageY-_this.canvas.getBoundingClientRect().top,
+                                }
+                            )
+                            // 绘图
+                            _this.drawLine(_this.temporaryLine,false);
+                        
+                    }, delay)
                 }
-                _this.timer =setTimeout(()=>{
-                    if(_this.isline){
-                        _this.temporaryLine.push(
-                            {
-                                x:touches.pageX-_this.canvas.getBoundingClientRect().left,
-                                y:touches.pageY-_this.canvas.getBoundingClientRect().top,
-                            }
-                        )
-                        // 绘图
-                        _this.drawLine(_this.temporaryLine,false);
-                    }
-                    if(_this.isarc){
-                        // 画圆
-                        _this.temporaryArc.length=1;
-                        _this.temporaryArc.push({
-                            x:touches.pageX-_this.canvas.getBoundingClientRect().left,
-                            y:touches.pageY-_this.canvas.getBoundingClientRect().top,
-                        })
-                        _this.beforeDrawArc(_this.temporaryArc);
-                    }
-                }, delay)
+                if(_this.isarc){
+                    // 画圆
+                    _this.temporaryArc.length=1;
+                    _this.temporaryArc.push({
+                        x:touches.pageX-_this.canvas.getBoundingClientRect().left,
+                        y:touches.pageY-_this.canvas.getBoundingClientRect().top,
+                    })
+                    _this.beforeDrawArc(_this.temporaryArc);
+                }
             })
         },
         // 阻止默认事件
         defaultEvent: function(e){
-            e.preventDefault();
+            if(e.cancelable){
+                e.preventDefault();
+                e.stopPropagation();
+            } 
         },
         //画线
         drawLine: function(data,isTria){
@@ -214,6 +235,10 @@
             this.isline=false;
             this.isarc=true;
         },
+        stopDraw: function(){
+            this.isline=false;
+            this.isarc=false;
+        },
         // 绘制箭头
         drawArrow: function(fromX, fromY, toX, toY,theta,headlen,width,color) {
             theta = typeof(theta) != 'undefined' ? theta : 30;
@@ -250,16 +275,13 @@
         //输出图片 quality质量默认1  type图片的格式默认image/png   rules规则返回的'all'  'arc'  'line'   methods输出图片方式 methods 单张输出||全部输出   
         getImageList: function(option,callback){
             var type = option.type || 'image/png'
-            var rules = option.rules || 'all';//默认输出全部
-            var quality = option.quality || 1;//输出图片的质量   0-0.92  默认1高质量输出
-            var methods = option.methods || 10;//是否输出全部 10输出全部相关的  否则按张输出
-            var original = option.original || false;//是否可以输出没有标记过的图片；默认不可以
+            var rules = option.rules || 'all';
+            var quality = option.quality || 1;
+            var methods = option.methods || 10;
             this.image_url_list=[];
             if(rules==='all'){
                 if(this.lineList.length>0 || this.arcList.length>0){
-                    this.image_url_list.push(this.canvas.toDataURL(type,quality)) 
-                }else if(original){
-                    this.image_url_list.push(this.canvas.toDataURL(type,quality)) 
+                    this.image_url_list.push(this.canvas.toDataURL(type,quality))
                 }
             }else{
                 //线判断是否要整张输出
