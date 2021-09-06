@@ -54,8 +54,6 @@
             _this.canvas.addEventListener('touchstart',(e)=>{
                 // 计算手指的位置
                 let touches = e.touches[0],
-                    eltop = e.target.offsetTop,
-                    elleft= e.target.offsetLeft;
                 if(_this.isline){
                     _this.temporaryLine=[];
                     _this.temporaryLine.push(
@@ -83,6 +81,14 @@
             let _this=this;
             _this.canvas.addEventListener('touchend',()=>{
                 if(_this.isline){
+                    // 处理长时间停留时的误差
+                    for(var i=_this.temporaryLine.length-1;i>=1;i--){
+                        if(Math.abs(_this.temporaryLine[i].x-_this.temporaryLine[i-1].x)<=5 && Math.abs(_this.temporaryLine[i].y-_this.temporaryLine[i-1].y)<=5){
+                            _this.temporaryLine.splice(i,1)
+                        }else{
+                            break;
+                        }
+                    }
                     _this.lineList.push(_this.temporaryLine);
                     _this.drawLine(_this.temporaryLine,true);
                 }
@@ -103,9 +109,7 @@
                 }else{
                     delay=10;
                 }
-                let touches = e.touches[0],
-                    eltop = e.target.offsetTop,
-                    elleft= e.target.offsetLeft;
+                let touches = e.touches[0];
                 if(_this.timer){
                     clearTimeout(_this.timer)
                 }
