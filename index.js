@@ -48,7 +48,7 @@
                 _this.ctx.drawImage(_this.image,0,0,elw,_this.canvas.height);
                 document.getElementById(_this.canvs_id).innerHTML='';
                 _this.clearAll();
- 	            document.getElementById(_this.canvs_id).append(_this.canvas);
+ 	            document.getElementById(_this.canvs_id).appendChild(_this.canvas);
                 // 监听canvsa上面的活动
                 _this.start();
                 _this.end();
