@@ -1,4 +1,4 @@
-# image_mark
+# image-mark-mobile
 
 #### 介绍
 一款移动端图片标注处理方案
@@ -6,7 +6,7 @@
 
 #### 使用说明
 ```
-import ImageMark from "image-mark";
+import ImageMark from "image-mark-mobile";
 
 var a1=new ImageMark(); 
 
