@@ -1,12 +1,14 @@
 # image_mark
 
 #### 介绍
-根据项目需求，封装了一个图片标注的插件
+一款移动端图片标注处理方案
 
 
 #### 使用说明
+```
+import ImageMark from "image-mark";
 
-var a1=new SNTMARK(); 
+var a1=new ImageMark(); 
 
 a1.init();//初始化el url 
 
@@ -19,6 +21,7 @@ a1.arc();//画圆
 a1.line();//画带箭头的线 
 
 a1.getImageList();//输出多种图片 
+```
 
-具体请看demo代码
+<img src="/image/_20230117164745.png"/>
 

@@ -28,10 +28,11 @@
     <div id="image-edit"></div>
 </body>
 <!-- 操作canvas -->    
-    <script src="./index2.js"></script>
     <script src="./objfn.js"></script>
-    <script>
-        var a1=new SNTMARK();
+    <script type="module">
+        // const ImageMark = require("index.js");
+        import ImageMark from "./index.js";
+        var a1= new ImageMark();
         a1.init(
             {
                 el:'image-edit',

@@ -1,0 +1,19 @@
+{
+  "name": "image-markm",
+  "version": "1.0.0",
+  "description": "一款移动端图片标注处理方案",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nuxwe/image-mark.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nuxwe/image-mark/issues"
+  },
+  "homepage": "https://github.com/nuxwe/image-mark#readme"
+}
