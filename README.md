@@ -8,20 +8,18 @@
 ```
 import ImageMark from "image-mark-mobile";
 
-var a1=new ImageMark(); 
-
-a1.init();//初始化el url 
-
-a1.clearAll();//清除画布 
-
-a1.clearLast();//撤销上一次标注 
-
-a1.arc();//画圆 
-
-a1.line();//画带箭头的线 
-
-a1.getImageList();//输出多种图片 
+var Mark=new ImageMark(); 
 ```
+### Event
+|事件|说明|值|
+|---|---|---|
+|init|初始化图片|el\url\|
+|clearAll|清除画布上的所有元素|-|
+|clearLast|撤销上一次标注|-|
+|arc|开始画圆|-|
+|line|开始画带箭头线|-|
+|getImageList|返回效果图|callback|
+
 
 <img src="/image/_20230118093647.png"/>
 
