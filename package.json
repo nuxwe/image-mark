@@ -1,6 +1,6 @@
 {
   "name": "image-mark-mobile",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "一款移动端图片标注处理方案",
   "main": "index.js",
   "scripts": {
