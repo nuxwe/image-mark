@@ -23,5 +23,5 @@ a1.line();//画带箭头的线
 a1.getImageList();//输出多种图片 
 ```
 
-<img src="/image/_20230117164745.png"/>
+<img src="/image/_20230118093647.png"/>
 

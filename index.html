@@ -28,15 +28,13 @@
     <div id="image-edit"></div>
 </body>
 <!-- 操作canvas -->    
-    <script src="./objfn.js"></script>
     <script type="module">
-        // const ImageMark = require("index.js");
         import ImageMark from "./index.js";
         var a1= new ImageMark();
         a1.init(
             {
                 el:'image-edit',
-                url:'/image/IMG_0203.HEIC.JPG'
+                url:'/image/_20230118093410.png',
             }
         )
         document.querySelector('.button1').addEventListener('click',function(){
