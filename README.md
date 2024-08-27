@@ -23,4 +23,4 @@ var Mark=new ImageMark();
 
 <img src="/image/_20230118093647.png"/>
 
-## [Demo](https://nuxwe.github.io/image-mark/)
+## [demo](https://nuxwe.github.io/image-mark-mobile/)
