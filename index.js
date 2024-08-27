@@ -6,44 +6,44 @@
             this.temporaryLine=[];//线临时存放
             this.temporaryArc=[];//圆临时存放
             this.timer;//定时器
-            this.canvs_id='';//包裹canvas容器的id
-            this.markimg_url='';//图片的url
+            this.canvasId='';//包裹canvas容器的id
+            this.markUrl='';//图片的url
             this.canvas='';//canvas容器
             this.ctx='';//canvas对象
-            this.isline=false;//代表划线
-            this.isarc=false;//代表画图
+            this.isLine=false;//代表划线
+            this.isArc=false;//代表画图
             this.image;//image对象
             this.image_url_list=[];//输出的图片数组
         }
         init(option){
             let _this=this;
             if(option.url){
-                _this.markimg_url=option.url
+                _this.markUrl=option.url
             }else{
                 throw 'url undefined'
             }
             if(option.el){
-                _this.canvs_id=option.el
+                _this.canvasId=option.el
             }else{
                 throw 'el undefined'
             };
             _this.image = new Image;
-            let imagew,imageh,
+            let imageWidth,imageHeight,
             // 获取宽度
-                elw = document.getElementById(_this.canvs_id).offsetWidth;
+                elw = document.getElementById(_this.canvasId).offsetWidth;
             // 创建一个canvas
             _this.canvas=document.createElement('canvas');
             _this.ctx=_this.canvas.getContext("2d");
             _this.canvas.width=elw;
-            _this.image.src = _this.markimg_url;
+            _this.image.src = _this.markUrl;
             _this.image.setAttribute('crossOrigin', 'anonymous');
             _this.image.onload = ()=>{
-                imagew = _this.image.width;
-                imageh = _this.image.height;
-                _this.canvas.height = imageh/(imagew/elw);
+                imageWidth = _this.image.width;
+                imageHeight = _this.image.height;
+                _this.canvas.height = imageHeight/(imageWidth/elw);
                 _this.ctx.drawImage(_this.image,0,0,elw,_this.canvas.height);
- 	            document.getElementById(_this.canvs_id).appendChild(_this.canvas);
-                // 监听canvsa上面的活动
+ 	            document.getElementById(_this.canvasId).appendChild(_this.canvas);
+                // 监听canvas上面的活动
                 _this.start();
                 _this.end();
             }
@@ -54,7 +54,7 @@
             _this.canvas.addEventListener('touchstart',(e)=>{
                 // 计算手指的位置
                 let touches = e.touches[0];
-                if(_this.isline){
+                if(_this.isLine){
                     _this.temporaryLine=[];
                     _this.temporaryLine.push(
                         {
@@ -63,7 +63,7 @@
                         }
                     );
                 }
-                if(_this.isarc){
+                if(_this.isArc){
                     _this.temporaryArc=[];
                     _this.temporaryArc.push(
                         {
@@ -80,7 +80,7 @@
         end(){
             let _this=this;
             _this.canvas.addEventListener('touchend',()=>{
-                if(_this.isline){
+                if(_this.isLine){
                     // 处理长时间停留时的误差
                     for(var i=_this.temporaryLine.length-1;i>=1;i--){
                         if(Math.abs(_this.temporaryLine[i].x-_this.temporaryLine[i-1].x)<=5 && Math.abs(_this.temporaryLine[i].y-_this.temporaryLine[i-1].y)<=5){
@@ -92,7 +92,7 @@
                     _this.lineList.push(_this.temporaryLine);
                     _this.drawLine(_this.temporaryLine,true);
                 }
-                if(_this.isarc && _this.temporaryArc.length===2){
+                if(_this.isArc && _this.temporaryArc.length===2){
                     _this.arcList.push(_this.temporaryArc);
                 }
             })
@@ -104,7 +104,7 @@
                 delay=50;
             _this.canvas.addEventListener('touchmove',(e)=>{
                 e.preventDefault();
-                if(_this.isline){
+                if(_this.isLine){
                     delay=100;
                 }else{
                     delay=10;
@@ -114,7 +114,7 @@
                     clearTimeout(_this.timer)
                 }
                 _this.timer =setTimeout(()=>{
-                    if(_this.isline){
+                    if(_this.isLine){
                         _this.temporaryLine.push(
                             {
                                 x:touches.pageX-_this.canvas.getBoundingClientRect().left,
@@ -124,7 +124,7 @@
                         // 绘图
                         _this.drawLine(_this.temporaryLine,false);
                     }
-                    if(_this.isarc){
+                    if(_this.isArc){
                         // 画圆
                         _this.temporaryArc.length=1;
                         _this.temporaryArc.push({
@@ -197,7 +197,7 @@
         //撤销上一个
         clearLast(){
             // 删除最后一个 然后绘制
-            if((this.isline && this.lineList.length>0 )|| this.arcList.length==0){
+            if((this.isLine && this.lineList.length>0 )|| this.arcList.length==0){
                 this.lineList.splice(this.lineList.length-1,1);  
             }else{
                 this.arcList.splice(this.arcList.length-1,1);
@@ -205,27 +205,27 @@
             this.beforeDrawArc();
         }
         line(){
-            this.isline=true;
-            this.isarc=false;
+            this.isLine=true;
+            this.isArc=false;
         }
         arc(){
-            this.isline=false;
-            this.isarc=true;
+            this.isLine=false;
+            this.isArc=true;
         }
         // 绘制箭头
-        drawArrow(fromX, fromY, toX, toY,theta, headlen, width, color) {
+        drawArrow(fromX, fromY, toX, toY,theta, headLength, width, color) {
             theta = typeof(theta) != 'undefined' ? theta : 30;
-            headlen = typeof(theta) != 'undefined' ? headlen : 10;
+            headLength = typeof(theta) != 'undefined' ? headLength : 10;
             width = typeof(width) != 'undefined' ? width : 1;
             color = typeof(color) != 'color' ? color : '#000';
             // 计算各角度和对应的P2,P3坐标
             let angle = Math.atan2(fromY - toY, fromX - toX) * 180 / Math.PI,
                 angle1 = (angle + theta) * Math.PI / 180,
                 angle2 = (angle - theta) * Math.PI / 180,
-                topX = headlen * Math.cos(angle1),
-                topY = headlen * Math.sin(angle1),
-                botX = headlen * Math.cos(angle2),
-                botY = headlen * Math.sin(angle2);
+                topX = headLength * Math.cos(angle1),
+                topY = headLength * Math.sin(angle1),
+                botX = headLength * Math.cos(angle2),
+                botY = headLength * Math.sin(angle2);
             this.ctx.save();
             this.ctx.beginPath();
             let arrowX = fromX - topX,

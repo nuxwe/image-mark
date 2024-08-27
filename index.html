@@ -12,6 +12,7 @@
         }
         button{
             margin: 5px;
+            background-color: transparent;
         }
     </style>
 </head>
@@ -30,27 +31,27 @@
 <!-- 操作canvas -->    
     <script type="module">
         import ImageMark from "./index.js";
-        var a1= new ImageMark();
-        a1.init(
+        const Mark= new ImageMark();
+        Mark.init(
             {
                 el:'image-edit',
                 url:'/image/_20230118093410.png',
             }
         )
         document.querySelector('.button1').addEventListener('click',function(){
-            a1.clearAll()
+            Mark.clearAll()
         })
         document.querySelector('.button2').addEventListener('click',function(){
-            a1.clearLast()
+            Mark.clearLast()
         })
         document.querySelector('.button3').addEventListener('click',function(){
-            a1.arc()
+            Mark.arc()
         })
         document.querySelector('.button4').addEventListener('click',function(){
-            a1.line()
+            Mark.line()
         })
         document.querySelector('.button5').addEventListener('click',function(){
-            a1.getImageList({},function(ret){
+            Mark.getImageList({},function(ret){
                 var str=''
                 for(var i=0;i<ret.length;i++){
                     str+=`<img src="${ret[i]}" />`
@@ -59,7 +60,7 @@
             })
         })
         document.querySelector('.button6').addEventListener('click',function(){
-            a1.getImageList({
+            Mark.getImageList({
                 rules:'line'
             },function(ret){
                 var str=''
@@ -70,7 +71,7 @@
             })
         })
         document.querySelector('.button7').addEventListener('click',function(){
-            a1.getImageList({
+            Mark.getImageList({
                 rules:'arc'
             },function(ret){
                 var str=''
@@ -81,7 +82,7 @@
             })
         })
         document.querySelector('.button8').addEventListener('click',function(){
-            a1.getImageList({
+            Mark.getImageList({
                 rules:'line',
                 methods:9
             },function(ret){
@@ -93,7 +94,7 @@
             })
         })
         document.querySelector('.button9').addEventListener('click',function(){
-            a1.getImageList({
+            Mark.getImageList({
                 rules:'arc',
                 methods:9
             },function(ret){
